@@ -1,28 +1,29 @@
 function [Ldistance] = p_dis(distance,num_can)
-Ldistance = distance; % num_can * num_can ¾ØÕó
+Ldistance = distance; % num_can * num_can çŸ©é˜µ
 
-% ±ÜÃâÖ±½ÓÕÒµ½×ÔÉí
+% é¿å…ç›´æ¥æ‰¾åˆ°è‡ªèº«
 for i = 1:num_can
     distance(i,i) = inf;
 end
 
 for i = 1:(num_can-1)
     for j = (i+1):num_can
-        t = 1; % ¼ÇÂ¼Ñ°ÕÒ´ÎÊı
-        k(t) = j; % ¼ÇÂ¼¸Ã´ÎÕÒµÄµã£¬¼´´Óµãj¿ªÊ¼ÏòiÕÒ
+        t = 1; % è®°å½•å¯»æ‰¾æ¬¡æ•°
+        k(t) = j; % è®°å½•è¯¥æ¬¡æ‰¾çš„ç‚¹ï¼Œå³ä»ç‚¹jå¼€å§‹å‘iæ‰¾
         
-%         id = num_can*(i-1) + i*(i+1)/2 + (j-1); % ÔÚ¾àÀë¾ØÕóÖĞÕÒ¶ÔÓ¦¾àÀëµÄĞĞ
+%         id = num_can*(i-1) + i*(i+1)/2 + (j-1); % åœ¨è·ç¦»çŸ©é˜µä¸­æ‰¾å¯¹åº”è·ç¦»çš„è¡Œ
         turn = 1;
         dik = distance(i,k(t)); 
         dkk = distance(i,k(t));
         max_dkk = 0;
-        
+        line_t2 = []; 
         while turn == 1
             
-            % ËùÓĞµãÓëiµÄ¾àÀë£¬ÕÒ³öĞ¡ÓÚµãiÓë k(t)Ö®¼ä¾àÀëµÄµã
-            line_t1 = find(distance(i,:) < dik); % ÕâÀï²»°üÀ¨¸Ãµã±¾Éí
-            
-            % Èô·ûºÏÌõ¼şµÄµã¼¯Îª¿Õ£¬ÄÇ¶¨ÒåijÖ®¼äµÄL¾àÀë¾ÍÊÇiµãÓët´úµÄk(t)¾àÀë
+            % æ‰€æœ‰ç‚¹ä¸içš„è·ç¦»ï¼Œæ‰¾å‡ºå°äºç‚¹iä¸ k(t)ä¹‹é—´è·ç¦»çš„ç‚¹
+            line_t1 = find(distance(i,~line_t2) < dik); % è¿™é‡Œä¸åŒ…æ‹¬è¯¥ç‚¹æœ¬èº«
+            line_t2_temp = find(distance(i,:) > dik);
+            line_t2 = [line_t2, line_t2_temp];
+            % è‹¥ç¬¦åˆæ¡ä»¶çš„ç‚¹é›†ä¸ºç©ºï¼Œé‚£å®šä¹‰ijä¹‹é—´çš„Lè·ç¦»å°±æ˜¯iç‚¹ä¸tä»£çš„k(t)è·ç¦»
             if isempty(line_t1)
                 if max_dkk == 0
                    Ldistance(i,j) = distance(i,j);
@@ -32,15 +33,15 @@ for i = 1:(num_can-1)
                 end
                 break
             end
-            % ÕÒ³öÉÏÊöµãÖĞÓëk(t)¾àÀë×îĞ¡µÄÒ»¸ö
+            % æ‰¾å‡ºä¸Šè¿°ç‚¹ä¸­ä¸k(t)è·ç¦»æœ€å°çš„ä¸€ä¸ª
             [~, id_temp] = min(distance(line_t1, k(t)));
             id_t = line_t1(id_temp);
-            % ¶¨Òå¾àÀë×îĞ¡µÄµãÎªk(t+1)
+            % å®šä¹‰è·ç¦»æœ€å°çš„ç‚¹ä¸ºk(t+1)
             t = t+1;
             k(t) = id_t;  
             dkk = distance(k(t),k(t-1));
             dik = distance(i,k(t));
-            % ½«Ã¿´Îµü´úÖĞ×îĞ¡¾àÀëµÄ×î´óÖµ¾àÀë¼ÇÂ¼ÏÂÀ´
+            % å°†æ¯æ¬¡è¿­ä»£ä¸­æœ€å°è·ç¦»çš„æœ€å¤§å€¼è·ç¦»è®°å½•ä¸‹æ¥
             if dkk > max_dkk
 %                 k(t), k(t-1);
                 max_dkk = dkk;
