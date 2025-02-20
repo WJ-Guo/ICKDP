@@ -20,9 +20,8 @@ for i = 1:(num_can-1)
         while turn == 1
             
             % 所有点与i的距离，找出小于点i与 k(t)之间距离的点
-            line_t1 = find(distance(i,~line_t2) < dik); % 这里不包括该点本身
-            line_t2_temp = find(distance(i,:) > dik);
-            line_t2 = [line_t2, line_t2_temp];
+            line_t1 = find(distance(i,:) < dik); % 这里不包括该点本身 
+
             % 若符合条件的点集为空，那定义ij之间的L距离就是i点与t代的k(t)距离
             if isempty(line_t1)
                 if max_dkk == 0
